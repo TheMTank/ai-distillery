@@ -1,0 +1,3 @@
+[submodule "arxiv-sanity-preserver"]
+	path = arxiv-sanity-preserver
+	url = https://github.com/beduffy/arxiv-sanity-preserver.git

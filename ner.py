@@ -72,7 +72,7 @@ def main():
     # Resolve keyword '_all' as alias for all entity types
     entity_types = VALID_ENTITY_TYPES if '_all' in args.entity_types else args.entity_types
     # set for faster access
-    entity_types = set(args.entity_types)
+    entity_types = set(entity_types)
     print("Extracting entities of types:", entity_types, "from '*.txt' documents in", args.data)
 
     for path in glob.iglob(os.path.join(args.data, '*.txt')):

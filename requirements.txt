@@ -2,3 +2,4 @@ numpy
 scipy
 sklearn
 spacy
+gensim==3.4.0

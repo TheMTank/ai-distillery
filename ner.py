@@ -8,6 +8,7 @@ Example to extract all entitys of type ORG: `python3 ner.py -d path/to/data -e O
 import argparse
 import os
 import glob
+import json
 
 try:
     import spacy
@@ -67,6 +68,10 @@ def main():
                         default=DEFAULT_ENTITY_TYPES, choices=list(VALID_ENTITY_TYPES) + ['_all'],
                         help=("Specify entity types to extract."
                               "Default: {}").format(DEFAULT_ENTITY_TYPES))
+    parser.add_argument('--num-files', default=1000, type=int,
+                        help="Choose the number of files to process since execution can take hours")
+    parser.add_argument('-o', '--output-path', default='data/entities_for',
+                        help="Choose where to output json file containing all entities with number of files added on")
 
     args = parser.parse_args()
     # Resolve keyword '_all' as alias for all entity types
@@ -75,13 +80,30 @@ def main():
     entity_types = set(entity_types)
     print("Extracting entities of types:", entity_types, "from '*.txt' documents in", args.data)
 
-    for path in glob.iglob(os.path.join(args.data, '*.txt')):
+    file_paths = glob.glob(os.path.join(args.data, '*.txt'))
+    num_files = len(file_paths)
+    print('Num files at path {}: {}'.format(args.data, num_files))
+    entities_for_file = {}
+    for idx, path in enumerate(file_paths):
         with open(path, 'r') as fhandle:
-            print("Processing:", fhandle.name)
-            doc = fhandle.read()
-            ents = extract_entities(doc, entity_types)
-            print("{}: {}".format(fhandle.name, ents))
+            try:
+                print("Processing:", fhandle.name)
+                doc = fhandle.read()
+                ents = extract_entities(doc, entity_types)
+                print("{}: {}".format(fhandle.name, ents))
+                entities_for_file[fhandle.name] = ents
+            except Exception as e:
+                print('Error reading file: \n {}'.format(e))
 
+        if idx % 100 == 0:
+            print('{}/{}')
+
+        # Execution takes a long time so break after num_files have been reached
+        if idx > args.num_files:
+            break
+
+    with open('{}_num_files_{}.json'.format(args.output_path, len(entities_for_file.keys())), 'w') as fp:
+        json.dump(entities_for_file, fp)
 
 if __name__ == '__main__':
     main()

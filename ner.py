@@ -90,13 +90,13 @@ def main():
                 print("Processing:", fhandle.name)
                 doc = fhandle.read()
                 ents = extract_entities(doc, entity_types)
-                print("{}: {}".format(fhandle.name, ents))
+                # print("{}: {}".format(fhandle.name, ents))
                 entities_for_file[fhandle.name] = ents
-            except Exception as e:
+            except ValueError as e:
                 print('Error reading file: \n {}'.format(e))
 
         if idx % 100 == 0:
-            print('{}/{}')
+            print('{}/{}'.format(idx, num_files))
 
         # Execution takes a long time so break after num_files have been reached
         if idx > args.num_files:

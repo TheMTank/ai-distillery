@@ -11,8 +11,7 @@ with open('data/all_ICLR_submissions/all_ICLR_submission_IDs.txt', 'r') as f:
 
 num_url_submissions = len(urls_on_submission_page)
 
-# todo 47, 67, 83?
-for idx in range(83, 1001):
+for idx in range(1, 1000):
     url = urls_on_submission_page[idx]
     r = requests.get(url, allow_redirects=True)
     save_path = 'data/all_ICLR_submissions/pdfs/{}.pdf'.format(url.split('/')[-1])

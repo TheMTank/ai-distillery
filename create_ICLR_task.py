@@ -20,6 +20,10 @@ import stopwords
 db_path = '/home/beduffy/all_projects/arxiv-sanity-preserver/db.p'
 
 # todo upload files to Github?
+# todo create bag of words model on titles alone and see if you can predict from title
+# todo do correlation check with length and acceptance.
+# todo do correlation check or forward/backward by removing used words which perfectly predict acceptance.
+# todo more correlation.
 
 # lets load the existing database to memory
 try:

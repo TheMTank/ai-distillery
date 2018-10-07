@@ -1,74 +1,71 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Arxiv Chart</title>
-</head>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
-<body>
+<html lang="{{ site.lang | default: "en-US" }}">
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}" media="screen" type="text/css">
+    <link rel="stylesheet" href="{{ '/assets/css/print.css' | relative_url }}" media="print" type="text/css">
 
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
 
-<canvas id="myChart" width="1000" height="600"></canvas>
+{% seo %}
+  </head>
 
-</body>
+  <body>
+    <header>
+      <div class="inner">
+        <a href="{{ '/' | absolute_url }}">
+          <h1>{{ site.title | default: site.github.repository_name }}test</h1>
+        </a>
+        <h2>{{ site.description | default: site.github.project_tagline }}</h2>
+        {% if site.github.is_project_page %}
+          <a href="{{ site.github.repository_url }}" class="button"><small>View project on</small> GitHub</a>
+        {% endif %}
+        {% if site.github.is_user_page %}
+          <a href="{{ site.github.owner_url }}" class="button"><small>Follow me on</small> GitHub</a>
+        {% endif %}
+      </div>
+    </header>
 
-<script>
-$( document ).ready(function() {
-    var ctx = document.getElementById("myChart").getContext('2d');
-    /*var myChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-            datasets: [{
-                label: '# of Votes',
-                data: [12, 19, 3, 5, 2, 3],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255,99,132,1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero:true
-                    }
-                }]
-            }
-        }
-    });*/
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          {{ content }}
+        </section>
 
-    /*new Chart(document.getElementById("chartjs-0"),{"type":"line","data":{"labels":["January","February","March","April","May","June","July"],"datasets":[{"label":"My First Dataset","data":[65,59,80,81,56,55,40],"fill":false,"borderColor":"rgb(75, 192, 192)","lineTension":0.1}]},"options":{}});*/
-    var ctx = document.getElementById("myChart").getContext('2d');
-      var myLineChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-        labels: ['14-1', '14-2', '14-3', '14-4', '14-5', '14-6', '14-7', '14-8', '14-9', '14-10', '14-11', '14-12', '15-1', '15-2', '15-3', '15-4', '15-5', '15-6', '15-7', '15-8', '15-9', '15-10', '15-11', '15-12', '16-1', '16-2', '16-3', '16-4', '16-5', '16-6', '16-7', '16-8', '16-9', '16-10', '16-11', '16-12', '17-1', '17-2', '17-3', '17-4', '17-5', '17-6', '17-7', '17-8', '17-9', '17-10', '17-11', '17-12', '18-1', '18-2', '18-3', '18-4', '18-5', '18-6', '18-7', '18-8'],
+        <aside id="sidebar">
+          {% if site.show_downloads %}
+            <a href="{{ site.github.zip_url }}" class="button">
+              <small>Download</small>
+              .zip file
+            </a>
+            <a href="{{ site.github.tar_url }}" class="button">
+              <small>Download</small>
+              .tar.gz file
+            </a>
+          {% endif %}
 
-          datasets: [ {
-                    label: 'Num papers released on arxiv over time (cs.[CV|CL|LG|AI|NE] / stat.ML)',
-                    data: [211, 255, 214, 228, 270, 270, 241, 217, 223, 245, 299, 263, 241, 296, 287, 303, 324, 351, 302, 279, 343, 306, 399, 342, 285, 362, 431, 469, 492, 578, 498, 493, 530, 581, 621, 557, 443, 533, 674, 699, 773, 729, 858, 849, 862, 725, 992, 818, 719, 1041, 1169, 1243, 1698, 1600, 1577, 1418],
-                    fill:false,
-                    borderColor:"rgb(75, 192, 192)",
-                    "lineTension":0.1}]
-        },
-        options: {responsive: false}
-    });
-});
-</script>
+          {% if site.github.is_project_page %}
+            <p class="repo-owner"><a href="{{ site.github.repository_url }}">{{ site.github.repository_name }}</a> is maintained by <a href="{{ site.github.owner_url }}">{{ site.github.owner_name }}</a>.</p>
+          {% endif %}
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+    {% if site.google_analytics %}
+      <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', '{{ site.google_analytics }}', 'auto');
+        ga('send', 'pageview');
+      </script>
+    {% endif %}
+  </body>
 </html>

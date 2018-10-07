@@ -1,4 +1,5 @@
 import os
+import sys
 import time
 from time import mktime
 from datetime import datetime
@@ -6,13 +7,10 @@ import collections
 import pickle
 import random
 import argparse
-# import urllib.request
-# import feedparser
-
-import stopwords
 
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 
 # from utils import Config, safe_pickle_dump
 db_path = '/home/beduffy/all_projects/arxiv-sanity-preserver/db.p'
@@ -31,12 +29,28 @@ except Exception as e:
     print('starting from an empty database')
     db = {}
 
-all_gan_titles_date = [[doc['title'], datetime.fromtimestamp(mktime(doc['published_parsed']))] for k, doc in db.items() if doc['_version'] == 1 and 'gan' in doc['title'].lower()]
+all_gan_titles_date = [[doc['title'], datetime.fromtimestamp(mktime(doc['published_parsed']))] for k, doc in db.items()
+                       if doc['_version'] == 1 and ('gan' in doc['title'].lower() or 'generative adversarial' in doc['title'].lower())]
+# todo look in abstract too but that's dangerous. maybe if they name it?
+all_gan_titles_date.sort(key=lambda x: x[1])#, reverse=True)
+# print([x for x in all_gan_titles_date])
+
+non_gan_words = ['organ', 'ganglia', 'gang', 'gangue', 'steganography', 'elegans', 'ligand', 'steganalysis',
+                 'steganographic', 'stegan', 'xiongan', 'intrigant']
+for idx, x in enumerate(all_gan_titles_date):
+    if not any([n_g_w in x[0].lower() for n_g_w in non_gan_words]):
+        print(idx, x[0], x[1])
+
+all_gan_titles_date = [x for x in all_gan_titles_date if not any([n_g_w in x[0].lower() for n_g_w in non_gan_words])]
+
+for idx, x in enumerate(all_gan_titles_date):
+    print(idx, x[0], x[1])
+
+# Add
+# todo compare to https://github.com/hindupuravinash/the-gan-zoo and check the ones im missing
+
 # all_dates = [datetime.fromtimestamp(mktime(doc['published_parsed'])) for k, doc in db.items() if doc['_version'] == 1]
 all_dates = [x[1] for x in all_gan_titles_date]
-
-all_gan_titles_date.sort(key=lambda x: x[1])#, reverse=True)
-# todo remove organic, oganising, organizing, more
 
 dt_year = collections.defaultdict(list)
 dt_month_in_year = collections.defaultdict(list)

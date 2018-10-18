@@ -27,12 +27,12 @@ def save_word2vec_format(path, words, vectors):
             print(line, file=outfile)
 
 
-def load_word2vec_format(path, dtype=np.float64):
+def load_word2vec_format(path):
     """ Loads an embedding in word2vec format """
     words = []
     with open(path, 'r') as fhandle:
         num_embeddings, embedding_dim = tuple(map(int, next(fhandle).strip().split(' ')))
-        embedding = np.empty((num_embeddings, embedding_dim), dtype)
+        embedding = np.empty((num_embeddings, embedding_dim))
         for idx, line in enumerate(fhandle):
             word, *numbers = line.strip().split(' ')
             words.append(word)

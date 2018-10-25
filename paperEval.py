@@ -8,8 +8,8 @@ from utils import load_word2vec_format
 
 class Dataset(object):
     def __init__(self, x, y):
-        self.examples = x
-        self.targets = y
+        self.x = x
+        self.y = y
 
 class SupervisedTask(object):
     def __init__(self, train, test):

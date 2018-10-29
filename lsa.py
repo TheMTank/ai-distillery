@@ -31,4 +31,5 @@ if __name__ == '__main__':
         'labels': [identifier_from_path(p) for p in ALL_PAPERS],
         'vectors': LSA_EMBEDDING
     }
-    pickle.dump(embedding)
+    with open(OUTFILE, 'w') as outfile:
+        pickle.dump(embedding, outfile)

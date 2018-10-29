@@ -3,3 +3,7 @@ scipy
 sklearn
 spacy
 gensim==3.4.0
+pylint
+fuzzywuzzy
+matplotlib
+pandas

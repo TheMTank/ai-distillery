@@ -8,7 +8,7 @@ Example: `python3 embed.py -f data/text -o data/saved_embedding -d 100`
 
 import argparse
 from gensim.models import word2vec
-
+from utils import clean_raw_data as cl
 
 def load_and_process(file_name, min_length):
     """
@@ -22,17 +22,7 @@ def load_and_process(file_name, min_length):
         List of list of tokens for gensim.word2vec input
     """
 
-    with open(file_name) as f:
-        content = f.readlines()
-
-    sentences = [x.strip().replace("\n", "").lower() for x in content]
-
-    content = [] # free ram 
-    sentences = filter(None, sentences) # filter empty strings
-    sentences = filter(lambda x : len(x) > min_length, sentences) # filter min length
-    sentences = [s.split() for s in sentences]
-
-    return sentences
+    return cl.clean_raw_text_from_file(file_name, min_length=min_length)
 
 def main():
 
@@ -63,7 +53,7 @@ def main():
 
     model = word2vec.Word2Vec(sentences, 
         size=args.dimension,
-        window=args.window, 
+        window=args.window,
         min_count=args.min_count,
         workers=args.workers, 
         sg=0, 

@@ -2,6 +2,7 @@ import gensim
 import argparse
 from os import listdir
 from os.path import isfile, join
+from utils import clean_raw_data as cl
 
 
 
@@ -9,8 +10,12 @@ from os.path import isfile, join
 def read_corpus(files, train_folder):
     for file in files:
         data = open(train_folder + file, "r").read().strip()
-        print(file)
-        yield gensim.models.doc2vec.TaggedDocument(gensim.utils.simple_preprocess(data), [file])
+        string = cl.remove_stop_words(data)
+        content = string.split()
+        content = map(lambda x: cl.remove_non_alpha_chars(x), content)
+        string = " ".join(content)
+        string = cl.filter_empty(string)
+        yield gensim.models.doc2vec.TaggedDocument(gensim.utils.simple_preprocess(string), [file])
 
 def main():
 

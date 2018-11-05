@@ -1,5 +1,23 @@
 import re
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
 
+def remove_stop_words(string):
+
+    stop_words = set(stopwords.words('english'))
+
+    words = string.split()
+
+
+    unstopped = [w for w in words if not w in stop_words]
+
+    return " ".join(unstopped)
+
+def filter_empty(string):
+    content = string.split()
+    content = [filter(lambda  x : x != "", s) for s in content]
+
+    return " ".join(content)
 
 def remove_non_alpha_chars(word):
     word = re.sub("\S*\d\S*", "", word).strip()

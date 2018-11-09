@@ -3,10 +3,8 @@ import argparse
 from os import listdir
 from os.path import isfile, join
 from utils import clean_raw_data as cl
-
 import logging
 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
-
 
 
 def read_corpus(files, train_folder):
@@ -14,12 +12,10 @@ def read_corpus(files, train_folder):
         data = open(train_folder + file, "r").read().strip()
         # Normalize first, then remove stop words
         string = cl.normalize_text(data)
-        string = cl.remove_stop_words(data)
-        # content = string.split()
-        # content = map(lambda x: cl.remove_non_alpha_chars(x), content)
-        # string = " ".join(content)
-        # string = cl.filter_empty(string)
+        string = cl.remove_stop_words(string)
+
         yield gensim.models.doc2vec.TaggedDocument(gensim.utils.simple_preprocess(string), [file])
+
 
 def main():
 
@@ -37,7 +33,6 @@ def main():
     train_folder = args.folder
 
     onlyfiles = [f for f in listdir(train_folder) if isfile(join(train_folder, f))]
-
 
     train_corpus = list(read_corpus(onlyfiles, train_folder))
 

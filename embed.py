@@ -22,8 +22,6 @@ def load_and_process(file_name, min_length):
         List of list of tokens for gensim.word2vec input
     """
 
-
-
     return cl.clean_raw_text_from_file(file_name, min_length=min_length)
 
 def main():

@@ -7,7 +7,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.pipeline import Pipeline
 from sklearn.decomposition import TruncatedSVD
 
-from utils.clean_raw_data import identifier_from_path
+from utils.file_handling import identifier_from_path
 
 ALL_PAPERS = glob.glob("data/txt/*")
 

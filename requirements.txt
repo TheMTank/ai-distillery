@@ -7,3 +7,5 @@ pylint
 fuzzywuzzy
 matplotlib
 pandas
+nltk
+logging

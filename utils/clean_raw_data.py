@@ -1,5 +1,6 @@
 import os
 import re
+
 try: 
     from nltk.corpus import stopwords
     # from nltk.tokenize import word_tokenize
@@ -21,6 +22,13 @@ def remove_stop_words(string):
     return " ".join(unstopped)
 
 def filter_empty(string):
+    """
+    Removes unused spaces from string
+
+    >>> filter_empty("data a  a   a ")
+    'data a a a'
+    """
+
     content = string.split()
     content = [filter(lambda  x : x != "", s) for s in content]
 
@@ -36,16 +44,14 @@ def clean_raw_text_from_file(file_name, min_length=0):
 
     with open(file_name) as f:
         content = f.readlines()
-    print("Text File Loaded")
-    print("Now Cleaning")
+
     content = [x.strip().replace("\n", "").lower() for x in content]
-    content = filter(lambda x: len(x) > min_length, content)  # filter min length
+    content = filter(lambda x: len(x) > min_length, content)
     content = [s.split() for s in content]
-    content = [map(lambda x : remove_non_alpha_chars(x), s) for s in content]
+    content = [map(lambda x: remove_non_alpha_chars(x), s) for s in content]
     content = [filter(lambda  x : x != "", s) for s in content]
 
     return content
-
 
 
 # An alternative short hand
@@ -81,21 +87,5 @@ def normalize_text(text):
                                   for w in text.lower().split())))
 
 
-##############################################################################
-# The following method is technically no data cleaning but resolving filenames
-# to ids Shift this method somewhere else if appropraite
-# Used by: ../lsa.py
 
-def identifier_from_path(path):
-    """
-    Gets the arxiv identifier from a path
 
-    >>> identifier_from_path("0507037v3.pdf.txt")
-    '0507037v3'
-    >>> identifier_from_path("0705.4676v8.pdf.txt")
-    '0705.4676v8'
-    >>> identifier_from_path("data/txt/0705.4676v8.pdf.txt")
-    '0705.4676v8'
-    """
-    basename = os.path.basename(path)
-    return os.path.splitext(os.path.splitext(basename)[0])[0]

@@ -1,8 +1,15 @@
+import os
 import re
-from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize
+try: 
+    from nltk.corpus import stopwords
+    # from nltk.tokenize import word_tokenize
+    NLTK_AVAILABLE = True
+except ImportError:
+    NLTK_AVAILABLE = False
 
 def remove_stop_words(string):
+    if not NLTK_AVAILABLE:
+        raise UserWarning("Please install nltk to make use of stop_words")
 
     stop_words = set(stopwords.words('english'))
 
@@ -41,4 +48,54 @@ def clean_raw_text_from_file(file_name, min_length=0):
 
 
 
+# An alternative short hand
+def normalize_text(text):
+    """
+    Normalizes a string.
+    The string is lowercased and all non-alphanumeric characters are removed.
 
+    >>> normalize("already normalized")
+    'already normalized'
+    >>> normalize("This is a fancy title / with subtitle ")
+    'this is a fancy title with subtitle'
+    >>> normalize("#@$~(@ $*This has fancy \\n symbols in it \\n")
+    'this has fancy symbols in it'
+    >>> normalize("Oh no a ton of special symbols: $*#@(@()!")
+    'oh no a ton of special symbols'
+    >>> normalize("A (2009) +B (2008)")
+    'a 2009 b 2008'
+    >>> normalize("1238912839")
+    '1238912839'
+    >>> normalize("#$@(*$(@#$*(")
+    ''
+    >>> normalize("Now$ this$ =is= a $*#(ing crazy string !!@)# check")
+    'now this is a ing crazy string check'
+    >>> normalize("Also commata, and other punctuation... is not alpha-numeric")
+    'also commata and other punctuation is not alphanumeric'
+    >>> normalize(("This goes over\\n" "Two Lines"))
+    'this goes over two lines'
+    >>> normalize('')
+    ''
+    """
+    return ' '.join(filter(None, (''.join(c for c in w if c.isalnum())
+                                  for w in text.lower().split())))
+
+
+##############################################################################
+# The following method is technically no data cleaning but resolving filenames
+# to ids Shift this method somewhere else if appropraite
+# Used by: ../lsa.py
+
+def identifier_from_path(path):
+    """
+    Gets the arxiv identifier from a path
+
+    >>> identifier_from_path("0507037v3.pdf.txt")
+    '0507037v3'
+    >>> identifier_from_path("0705.4676v8.pdf.txt")
+    '0705.4676v8'
+    >>> identifier_from_path("data/txt/0705.4676v8.pdf.txt")
+    '0705.4676v8'
+    """
+    basename = os.path.basename(path)
+    return os.path.splitext(os.path.splitext(basename)[0])[0]

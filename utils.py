@@ -2,20 +2,6 @@
 import os
 import numpy as np
 
-def identifier_from_path(path):
-    """
-    Gets the arxiv identifier from a path
-
-    >>> identifier_from_path("0507037v3.pdf.txt")
-    '0507037v3'
-    >>> identifier_from_path("0705.4676v8.pdf.txt")
-    '0705.4676v8'
-    >>> identifier_from_path("data/txt/0705.4676v8.pdf.txt")
-    '0705.4676v8'
-    """
-    basename = os.path.basename(path)
-    return os.path.splitext(os.path.splitext(basename)[0])[0]
-
 def save_word2vec_format(path, words, vectors):
     """ Saves an embedding, words must have corresponding indices """
     vectors = np.asarray(vectors)

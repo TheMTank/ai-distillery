@@ -12,7 +12,7 @@ from utils.clean_raw_data import identifier_from_path
 ALL_PAPERS = glob.glob("data/txt/*")
 
 N_COMPONENTS = int(sys.argv[1]) if len(sys.argv) > 1 else 100
-OUTFILE = "embeddings/lsa-{}.w2v.txt".format(N_COMPONENTS)
+OUTFILE = "embeddings/lsa-{}.pkl".format(N_COMPONENTS)
 
 with open('data/full_paper_id_to_title_dict.pkl', 'rb') as fhandle:
     ID2TITLE = pickle.load(fhandle)

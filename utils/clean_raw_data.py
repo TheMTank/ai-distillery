@@ -41,17 +41,15 @@ def remove_non_alpha_chars(word):
     return word
 
 def clean_raw_text_from_file(file_name, min_length=0):
-
     with open(file_name) as f:
         content = f.readlines()
-
-    content = [x.strip().replace("\n", "").lower() for x in content]
+    content = map(lambda x : normalize_text(x), content)
     content = filter(lambda x: len(x) > min_length, content)
-    content = [s.split() for s in content]
-    content = [map(lambda x: remove_non_alpha_chars(x), s) for s in content]
-    content = [filter(lambda  x : x != "", s) for s in content]
 
     return content
+
+def list_of_strings_to_list_of_lists(content):
+    return [s.split() for s in content]
 
 
 # An alternative short hand

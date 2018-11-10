@@ -1,5 +1,7 @@
 import os
 import datetime
+import pickle
+import np
 
 def identifier_from_path(path):
     """
@@ -28,3 +30,29 @@ def generate_file_name(type, dimension, dataset):
 
     return "type_" + type + "#dim_" + str(dimension) + "#dataset_" + dataset + "#time_" \
            + datetime.datetime.now().isoformat()
+
+
+def gensim_to_bf(model):
+    """
+    Convers a gensim model to bf format and save pickled file
+    :param model:
+    :return:
+    """
+    vocab = list(model.wv.vocab.keys())
+
+    embeddings_array = np.concatenate([model[word].reshape(1, -1) for word in vocab], axis=0)
+
+    embeddings_bf = {'labels': vocab, 'embeddings': embeddings_array}
+    return embeddings_bf
+
+def save_bf_to_pickle(bf_model, folder_location):
+    """
+    Save bf model using pickle
+    :param bf_model:
+    :param folder_location:
+    :return:
+    """
+    save_fp = folder_location + '/embeddings_obj_{}_{}.pkl'.format(len(bf_model["vocab"]), datetime.datetime.now().strftime(
+        "%Y-%m-%d_%H:%M:%S"))
+    with open(save_fp, 'wb') as handle:
+        pickle.dump(bf_model, handle, protocol=pickle.HIGHEST_PROTOCOL)

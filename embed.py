@@ -9,6 +9,7 @@ Example: `python3 embed.py -f data/text -o data/saved_embedding -d 100`
 import argparse
 from gensim.models import word2vec
 from utils import clean_raw_data as cl
+from utils import file_handling
 
 def load_and_process(file_name, min_length):
     """
@@ -41,6 +42,8 @@ def main():
                     help="Number of iteration for learning the embeddings", type=int)
     parser.add_argument('-ws', '--workers', default="2",
                         help="Number of workers for this task",     type=int)
+    parser.add_argument('-data', '--data', default="no_name_data",
+                        help="Dataset name")
     parser.add_argument('-o', '--output_file', default="output_embedding",
                         help="Output embedding file")
 
@@ -59,6 +62,8 @@ def main():
         sg=0, 
         iter=args.iterations)
 
+    bf_format = file_handling.gensim_to_bf(model)
+    file_handling.save_bf_to_pickle(bf_format, file_handling.generate_file_name(type="word2vec", dataset="", dimension=args.dimension))
     model.save(args.output_file)
 
 

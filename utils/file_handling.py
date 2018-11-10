@@ -45,14 +45,12 @@ def gensim_to_bf(model):
     embeddings_bf = {'labels': vocab, 'embeddings': embeddings_array}
     return embeddings_bf
 
-def save_bf_to_pickle(bf_model, folder_location):
+def save_bf_to_pickle(bf_model, output_location):
     """
     Save bf model using pickle
     :param bf_model:
     :param folder_location:
     :return:
     """
-    save_fp = folder_location + '/embeddings_obj_{}_{}.pkl'.format(len(bf_model["vocab"]), datetime.datetime.now().strftime(
-        "%Y-%m-%d_%H:%M:%S"))
-    with open(save_fp, 'wb') as handle:
+    with open(output_location, 'wb') as handle:
         pickle.dump(bf_model, handle, protocol=pickle.HIGHEST_PROTOCOL)

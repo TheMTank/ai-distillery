@@ -1,7 +1,7 @@
 import os
 import datetime
 import pickle
-import np
+import numpy as np
 
 def identifier_from_path(path):
     """

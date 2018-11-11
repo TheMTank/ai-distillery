@@ -8,8 +8,9 @@ Example: `python3 embed.py -f data/text -o data/saved_embedding -d 100`
 
 import argparse
 from gensim.models import word2vec
-from utils import clean_raw_data as cl
+from utils.clean_raw_data import list_of_strings_to_list_of_lists, clean_raw_text_from_file, phrasing_sentences
 from utils import file_handling
+
 
 def load_and_process(file_name, min_length):
     """
@@ -22,8 +23,10 @@ def load_and_process(file_name, min_length):
         -------
         List of list of tokens for gensim.word2vec input
     """
+    cleaned_text = clean_raw_text_from_file(file_name, min_length=min_length)
+    phrased_lists = phrasing_sentences(list_of_strings_to_list_of_lists(cleaned_text))
+    return phrased_lists
 
-    return cl.list_of_strings_to_list_of_lists(cl.clean_raw_text_from_file(file_name, min_length=min_length))
 
 def main():
 

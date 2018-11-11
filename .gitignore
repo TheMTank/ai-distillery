@@ -2,3 +2,5 @@ venv
 data
 embeddings
 __pycache__/
+.idea/*
+.idea/

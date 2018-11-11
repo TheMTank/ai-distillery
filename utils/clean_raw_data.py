@@ -1,7 +1,7 @@
-import os
 import re
+from gensim.models.phrases import Phrases, Phraser
 
-try: 
+try:
     from nltk.corpus import stopwords
     # from nltk.tokenize import word_tokenize
     NLTK_AVAILABLE = True
@@ -50,6 +50,15 @@ def clean_raw_text_from_file(file_name, min_length=0):
 
 def list_of_strings_to_list_of_lists(content):
     return [s.split() for s in content]
+
+
+def phrasing_sentences(sentences):
+    phrases_bi = Phrases(sentences, min_count=5, threshold=1)
+    bigram = Phraser(phrases_bi)
+    sentences = map(lambda x: x, bigram[sentences])
+    phrases_tri = Phrases(sentences, min_count=5, threshold=1)
+    trigram = Phraser(phrases_tri)
+    return map(lambda x: x, trigram[sentences])
 
 
 # An alternative short hand

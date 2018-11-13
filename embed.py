@@ -24,7 +24,7 @@ def load_and_process(file_name, min_length):
         List of list of tokens for gensim.word2vec input
     """
     cleaned_text = clean_raw_text_from_file(file_name, min_length=min_length)
-    phrased_lists = phrasing_sentences(list_of_strings_to_list_of_lists(cleaned_text))
+    phrased_lists = list_of_strings_to_list_of_lists(cleaned_text)
     return phrased_lists
 
 

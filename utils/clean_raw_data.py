@@ -1,5 +1,7 @@
 import re
 from gensim.models.phrases import Phrases, Phraser
+import os
+import pandas as pd
 
 try:
     from nltk.corpus import stopwords
@@ -15,7 +17,6 @@ def remove_stop_words(string):
     stop_words = set(stopwords.words('english'))
 
     words = string.split()
-
 
     unstopped = [w for w in words if not w in stop_words]
 
@@ -43,10 +44,14 @@ def remove_non_alpha_chars(word):
 def clean_raw_text_from_file(file_name, min_length=0):
     with open(file_name) as f:
         content = f.readlines()
+    ngr = NGramReplacer()
+
     content = map(lambda x : normalize_text(x), content)
+    content = map(lambda x : remove_stop_words(x), content)
+    content = map(lambda x : ngr.replace_ngram_in_sentence(x), content)
     content = filter(lambda x: len(x) > min_length, content)
 
-    return content
+    return list(content)
 
 def list_of_strings_to_list_of_lists(content):
     return [s.split() for s in content]
@@ -60,6 +65,23 @@ def phrasing_sentences(sentences):
     trigram = Phraser(phrases_tri)
     return map(lambda x: x, trigram[sentences])
 
+class NGramReplacer:
+
+    def __init__(self):
+        script_dir = os.path.dirname(__file__)
+        path = os.path.join(script_dir, "n-grams.txt")
+        data = pd.read_csv(path, names=["index", "value"])
+        zipped_data = zip(data["index"].values, data["value"].values)
+        self.ngrams = dict((y, x) for x, y in zipped_data)
+
+    def replace_ngrams_in_content(self, content):
+        content = map(lambda x : self.replace_ngram_in_sentence(x), content)
+        return content
+
+    def replace_ngram_in_sentence(self, sentence):
+        for key in self.ngrams.keys():
+            sentence = sentence.replace(self.ngrams[key].strip(),key)
+        return sentence
 
 # An alternative short hand
 def normalize_text(text):

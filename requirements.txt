@@ -8,4 +8,4 @@ fuzzywuzzy
 matplotlib
 pandas
 nltk
-logging
+pytest

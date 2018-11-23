@@ -43,7 +43,7 @@ def main():
         data = ask_semanticscholar(id)
         print(data)
 
-        with open("harvest_checkpoint.txt", 'a') as chk_file:
+        with open("harvest_checkpoint.txt", 'w') as chk_file:
             print(id, file=chk_file)
         time.sleep(1)
 

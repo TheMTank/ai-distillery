@@ -85,6 +85,8 @@ def main():
             except Exception:
                 time.sleep(RETRY_SLEEPTIME)
                 continue
+        else:
+            raise UserWarning("Number of retries exceeded on id: " + id + " Please retry later")
 
         with open("harvest_checkpoint.txt", 'w') as chk_file:
             print(id, file=chk_file)

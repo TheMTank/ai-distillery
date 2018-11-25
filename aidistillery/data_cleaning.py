@@ -3,18 +3,19 @@ from gensim.models.phrases import Phrases, Phraser
 import os
 import pandas as pd
 
-try:
-    from nltk.corpus import stopwords
-    # from nltk.tokenize import word_tokenize
-    NLTK_AVAILABLE = True
-except ImportError:
-    NLTK_AVAILABLE = False
+from sklearn.feature_extraction.stop_words import ENGLISH_STOP_WORDS
+
+# try:
+#     from nltk.corpus import stopwords
+#     # from nltk.tokenize import word_tokenize
+#     NLTK_AVAILABLE = True
+# except ImportError:
+#     NLTK_AVAILABLE = False
 
 def remove_stop_words(string):
-    if not NLTK_AVAILABLE:
-        raise UserWarning("Please install nltk to make use of stop_words")
-
-    stop_words = set(stopwords.words('english'))
+    # old variant:
+    # stop_words = set(stopwords.words('english'))
+    stop_words = ENGLISH_STOP_WORDS
 
     words = string.split()
 

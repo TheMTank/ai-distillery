@@ -16,8 +16,7 @@ setup(name='aidistillery',
             'pandas',
             'spacy',
             'gensim==3.4.0',
-            'fuzzywuzzy',
-            'nltk' # can we get rid of this dependency?
+            'fuzzywuzzy'
       ],
       scripts=[
             'bin/embed_doc2vec',

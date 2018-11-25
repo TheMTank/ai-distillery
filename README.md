@@ -54,3 +54,9 @@ Then follow the [guide by Karpathy](https://github.com/karpathy/arxiv-sanity-pre
 
 Please consult `-h` for more information on how to run one of the executables.
 
+### Developing
+
+Make sure to install the aidistillery  package by `pip install -e .` or `python3 setup.py develop`.
+This way, any changes are taken into account without the need to reinstall.
+We look forward to receiving your pull requests.
+

@@ -4,3 +4,4 @@ embeddings
 __pycache__/
 .idea/*
 .idea
+*.egg-info

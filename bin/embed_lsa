@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 """ Baselines for paper embeddings """
 import glob
 import sys
@@ -7,7 +10,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.pipeline import Pipeline
 from sklearn.decomposition import TruncatedSVD
 
-from utils.file_handling import identifier_from_path
+from aidistillery.file_handling import identifier_from_path
 
 ALL_PAPERS = glob.glob("data/txt/*")
 

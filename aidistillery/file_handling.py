@@ -54,3 +54,35 @@ def save_bf_to_pickle(bf_model, output_location):
     """
     with open(output_location, 'wb') as handle:
         pickle.dump(bf_model, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+
+
+###########################################################
+# Deprecated. Old methods to save and load word2vec-format.
+# Please use Ben-format instead.
+
+def save_word2vec_format(path, words, vectors):
+    """ Saves an embedding, words must have corresponding indices """
+    vectors = np.asarray(vectors)
+    num_embeddings, embedding_dim = len(words), vectors.shape[1]
+    with open(path, 'w') as outfile:
+        print("{} {}".format(num_embeddings, embedding_dim), file=outfile)
+        for idx, word in enumerate(words):
+            line = "{} {}".format(word, ' '.join(map(str, vectors[idx])))
+            print(line, file=outfile)
+
+
+def load_word2vec_format(path):
+    """ Loads an embedding in word2vec format """
+    words = []
+    with open(path, 'r') as fhandle:
+        num_embeddings, embedding_dim = tuple(map(int, next(fhandle).strip().split(' ')))
+        embedding = np.empty((num_embeddings, embedding_dim))
+        for idx, line in enumerate(fhandle):
+            word, *numbers = line.strip().split(' ')
+            words.append(word)
+            embedding[idx, :] = np.array(numbers)
+
+    return words, embedding
+
+###########################################################

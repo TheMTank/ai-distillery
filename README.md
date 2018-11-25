@@ -31,7 +31,7 @@ The package will install the following executables:
 
 The commands link the respective executable scripts in `bin/`.
 
-### Fetching Data
+### Fetching data
 
 We maintain [a fork](https://github.com/beduffy/arxiv-sanity-preserver) of
 [Karpathy's Arxiv Sanity Preserver](https://github.com/karpathy/arxiv-sanity-preserver) to harvest

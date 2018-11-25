@@ -32,6 +32,28 @@ def generate_file_name(type, dimension, dataset):
            + datetime.datetime.now().isoformat()
 
 
+class BF:
+    def __init__(self, labels=list(), embeddings=list()):
+        self.labels = labels
+        self.embeddings = embeddings
+
+    def load_from_gensim(self, model):
+
+        self.labels = list(model.wv.vocab.keys())
+        self.embeddings = np.concatenate([model[word].reshape(1, -1) for word in self.labels], axis=0)
+
+    def save(self, output_location):
+        """
+        Save bf model using pickle
+        :param output_location:
+        :return:
+        """
+        bf_model = {'labels': self.labels, 'embeddings': self.embeddings}
+
+        with open(output_location, 'wb') as handle:
+            pickle.dump(bf_model, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+
 def gensim_to_bf(model):
     """
     Convers a gensim model to bf format and save pickled file
@@ -42,47 +64,5 @@ def gensim_to_bf(model):
 
     embeddings_array = np.concatenate([model[word].reshape(1, -1) for word in vocab], axis=0)
 
-    embeddings_bf = {'labels': vocab, 'embeddings': embeddings_array}
-    return embeddings_bf
-
-def save_bf_to_pickle(bf_model, output_location):
-    """
-    Save bf model using pickle
-    :param bf_model:
-    :param folder_location:
-    :return:
-    """
-    with open(output_location, 'wb') as handle:
-        pickle.dump(bf_model, handle, protocol=pickle.HIGHEST_PROTOCOL)
-
-
-
-###########################################################
-# Deprecated. Old methods to save and load word2vec-format.
-# Please use Ben-format instead.
-
-def save_word2vec_format(path, words, vectors):
-    """ Saves an embedding, words must have corresponding indices """
-    vectors = np.asarray(vectors)
-    num_embeddings, embedding_dim = len(words), vectors.shape[1]
-    with open(path, 'w') as outfile:
-        print("{} {}".format(num_embeddings, embedding_dim), file=outfile)
-        for idx, word in enumerate(words):
-            line = "{} {}".format(word, ' '.join(map(str, vectors[idx])))
-            print(line, file=outfile)
-
-
-def load_word2vec_format(path):
-    """ Loads an embedding in word2vec format """
-    words = []
-    with open(path, 'r') as fhandle:
-        num_embeddings, embedding_dim = tuple(map(int, next(fhandle).strip().split(' ')))
-        embedding = np.empty((num_embeddings, embedding_dim))
-        for idx, line in enumerate(fhandle):
-            word, *numbers = line.strip().split(' ')
-            words.append(word)
-            embedding[idx, :] = np.array(numbers)
-
-    return words, embedding
-
-###########################################################
+    bf = BF(vocab, embeddings_array)
+    return bf

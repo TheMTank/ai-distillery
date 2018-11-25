@@ -11,11 +11,8 @@ Example: `python3 embed.py -f data/text -o data/saved_embedding -d 100`
 """
 
 import argparse
-from gensim.models import word2vec
-
-from aidistillery import file_handling
 from aidistillery.data_cleaning import list_of_strings_to_list_of_lists, clean_raw_text_from_file, phrasing_sentences
-
+from aidistillery.models import word2vec_wrapper
 
 def load_and_process(file_name, min_length):
     """
@@ -62,17 +59,17 @@ def main():
 
     sentences = load_and_process(args.file_name, args.min_length)
 
-    model = word2vec.Word2Vec(sentences, 
-        size=args.dimension,
+    w2v = word2vec_wrapper.Word2VecWrapper(sentences,
+        dimension=args.dimension,
         window=args.window,
         min_count=args.min_count,
         workers=args.workers, 
         sg=0, 
-        iter=args.iterations)
+        iterations=args.iterations)
 
-    bf_format = file_handling.gensim_to_bf(model)
-    file_handling.save_bf_to_pickle(bf_format, file_handling.generate_file_name(type="word2vec", dataset="", dimension=args.dimension))
-    model.save(args.output_file)
+    model = w2v.fit()
+
+    model.save()
 
 
 if __name__ == '__main__':

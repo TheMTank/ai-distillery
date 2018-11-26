@@ -91,27 +91,27 @@ def normalize_text(text):
     Normalizes a string.
     The string is lowercased and all non-alphanumeric characters are removed.
 
-    >>> normalize("already normalized")
+    >>> normalize_text("already normalized")
     'already normalized'
-    >>> normalize("This is a fancy title / with subtitle ")
+    >>> normalize_text("This is a fancy title / with subtitle ")
     'this is a fancy title with subtitle'
-    >>> normalize("#@$~(@ $*This has fancy \\n symbols in it \\n")
+    >>> normalize_text("#@$~(@ $*This has fancy \\n symbols in it \\n")
     'this has fancy symbols in it'
-    >>> normalize("Oh no a ton of special symbols: $*#@(@()!")
+    >>> normalize_text("Oh no a ton of special symbols: $*#@(@()!")
     'oh no a ton of special symbols'
-    >>> normalize("A (2009) +B (2008)")
+    >>> normalize_text("A (2009) +B (2008)")
     'a 2009 b 2008'
-    >>> normalize("1238912839")
+    >>> normalize_text("1238912839")
     '1238912839'
-    >>> normalize("#$@(*$(@#$*(")
+    >>> normalize_text("#$@(*$(@#$*(")
     ''
-    >>> normalize("Now$ this$ =is= a $*#(ing crazy string !!@)# check")
+    >>> normalize_text("Now$ this$ =is= a $*#(ing crazy string !!@)# check")
     'now this is a ing crazy string check'
-    >>> normalize("Also commata, and other punctuation... is not alpha-numeric")
+    >>> normalize_text("Also commata, and other punctuation... is not alpha-numeric")
     'also commata and other punctuation is not alphanumeric'
-    >>> normalize(("This goes over\\n" "Two Lines"))
+    >>> normalize_text(("This goes over\\n" "Two Lines"))
     'this goes over two lines'
-    >>> normalize('')
+    >>> normalize_text('')
     ''
     """
     return ' '.join(filter(None, (''.join(c for c in w if c.isalnum())

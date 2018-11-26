@@ -3,8 +3,13 @@ python:
   - "3.5"
   - "3.6"
 
+
+# Hack to fix broken boto package on travis
+before_install:
+  - export BOTO_CONFIG=/dev/null
+
 install:
   pip install .
 
 script:
-  pytest
+  cd tests; python -m pytest

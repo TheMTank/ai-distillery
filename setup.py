@@ -16,7 +16,8 @@ setup(name='aidistillery',
             'pandas',
             'spacy',
             'gensim==3.4.0',
-            'fuzzywuzzy'
+            'fuzzywuzzy',
+            'pytest'
       ],
       scripts=[
             'bin/embed_doc2vec',

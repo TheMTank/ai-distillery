@@ -1,4 +1,4 @@
-from utils.clean_raw_data import NGramReplacer, clean_raw_text_from_file
+from aidistillery.data_cleaning import NGramReplacer, clean_raw_text_from_file
 import os
 import logging
 logging.basicConfig(level=logging.INFO)

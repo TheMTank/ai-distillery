@@ -1,4 +1,5 @@
 import re
+import gensim
 from gensim.models.phrases import Phrases, Phraser
 import os
 import pandas as pd

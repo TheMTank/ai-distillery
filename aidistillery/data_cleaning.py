@@ -38,8 +38,10 @@ def filter_empty(string):
     return " ".join(content)
 
 def remove_non_alpha_chars(word):
-    word = re.sub("\S*\d\S*", "", word).strip()
-    word = re.sub('[^A-Za-z]', '', word).strip()
+    # Deprecated. Use `normalize_text` instead.
+    # Drop if unused.
+    word = re.sub(r"\S*\d\S*", "", word).strip()
+    word = re.sub(r"[^A-Za-z]", "", word).strip()
 
     return word
 
@@ -86,7 +88,7 @@ class NGramReplacer:
         return sentence
 
 # An alternative short hand
-def normalize_text(text):
+def normalize_text(text, lower=True):
     """
     Normalizes a string.
     The string is lowercased and all non-alphanumeric characters are removed.
@@ -114,8 +116,10 @@ def normalize_text(text):
     >>> normalize_text('')
     ''
     """
+    if lower:
+        text = text.lower()
     return ' '.join(filter(None, (''.join(c for c in w if c.isalnum())
-                                  for w in text.lower().split())))
+                                  for w in text.split())))
 
 
 

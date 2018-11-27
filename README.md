@@ -68,13 +68,13 @@ embed_lsa data/txt/ -n 2 --annotate data/full_paper_id_to_title_dict.pkl -o data
 This call assumes that `data/txt/` contains `*.pdf.txt` files.
 The `-n` arguments determines the number of components at which the singular value decomposition in LSA should truncate. This also determines the embedding dimension.
 The optional `--annotate` argument supplies a path to a pickled dict which maps identifiers (filenames without `.pdf.txt`) to titles for visualization.
-The output will be stored in Ben format. A pickled dict of type `{'labels':
-labels:list(str), 'embeddings': embeddings:ndarray }` such that `labels[i]`
+The output is stored in Ben format. A pickled dict of type `{'labels':
+labels:list(str), 'embeddings': embeddings:numpy.ndarray }` such that `labels[i]`
 corresponds to `embeddings[i]`.
 
 ### Developing
 
 Make sure to install the aidistillery  package by `pip install -e .` or `python3 setup.py develop`.
-This way, any changes are taken into account without the need to reinstall.
+This way, any changes take effect without the need to reinstall.
 We look forward to receiving your pull requests.
 

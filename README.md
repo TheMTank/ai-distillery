@@ -28,7 +28,7 @@ The package will install the following executables:
 - `harvest_semanticscholar`
 - `extract_entities`
 
-The commands link the respective executable scripts in `scripts/`.
+The commands link to the respective executable scripts in `scripts/`.
 
 
 ## Fetching data

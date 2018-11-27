@@ -2,7 +2,9 @@
 # -*- coding: utf-8 -*-
 
 """ Baselines for paper embeddings """
+import argparse
 import glob
+import os
 import sys
 import pickle
 
@@ -12,32 +14,56 @@ from sklearn.decomposition import TruncatedSVD
 
 from aidistillery.file_handling import identifier_from_path
 
-ALL_PAPERS = glob.glob("data/txt/*")
+def main(args):
+    """Runs lsa on a data directory
 
-N_COMPONENTS = int(sys.argv[1]) if len(sys.argv) > 1 else 100
-OUTFILE = "embeddings/lsa-{}.pkl".format(N_COMPONENTS)
+    :args: command line argument namespace
+    """
+    lsa = Pipeline(
+        [
+            ("tfidf", TfidfVectorizer(input='filename', stop_words='english', max_features=50000)),
+            ("svd", TruncatedSVD(n_components=args.n_components))
+        ]
+    )
+    all_papers = glob.glob(os.path.join(args.data, "*"))
+    print("Run {}-dim LSA on {} papers.".format(args.n_components, len(all_papers)))
+    lsa_embedding = lsa.fit_transform(all_papers)
+    print("Explained variance ratio sum:", lsa.named_steps.svd.explained_variance_ratio_.sum())
+    # save_word2vec_format(OUTFILE, [identifier_from_path(p) for p in all_papers], LSA_EMBEDDING)
+    labels = [identifier_from_path(p) for p in all_papers]
 
-with open('data/full_paper_id_to_title_dict.pkl', 'rb') as fhandle:
-    ID2TITLE = pickle.load(fhandle)
+    if args.annotate is not None:
+        with open(args.annotate, 'rb') as fhandle:
+            id2title = pickle.load(fhandle)
+        # Replace identifier labels with title labels (if possible)
+        labels = [id2title.get(x, x) for x in labels]
 
-LSA = Pipeline(
-    [
-        ("tfidf", TfidfVectorizer(input='filename', stop_words='english', max_features=50000)),
-        ("svd", TruncatedSVD(n_components=N_COMPONENTS))
-    ]
-)
+    embedding_bf = {
+        'labels': labels,
+        'embeddings': lsa_embedding
+    }
 
+    with open(args.outfile, 'wb') as outfile:
+        pickle.dump(embedding_bf, outfile)
 
 if __name__ == '__main__':
-    print("Run {}-dim LSA on {} papers.".format(N_COMPONENTS, len(ALL_PAPERS)))
-    LSA_EMBEDDING = LSA.fit_transform(ALL_PAPERS)
-    print("Explained variance ratio sum:", LSA.named_steps.svd.explained_variance_ratio_.sum())
-    # save_word2vec_format(OUTFILE, [identifier_from_path(p) for p in ALL_PAPERS], LSA_EMBEDDING)
-    ALL_IDS = [identifier_from_path(p) for p in ALL_PAPERS]
-    EMBEDDING = {
-        # DONE get titles to make this true ben format (ID2TITLE might be incomplete)
-        'labels': [ID2TITLE.get(x, x) for x in ALL_IDS],
-        'embeddings': LSA_EMBEDDING
-    }
-    with open(OUTFILE, 'wb') as outfile:
-        pickle.dump(EMBEDDING, outfile)
+    PARSER = argparse.ArgumentParser()
+    PARSER.add_argument('data',
+                        help="Path to dir containing full-texts")
+    PARSER.add_argument('--annotate',
+                        help="Path to pickled dict containing id to title mapping",
+                        default=None)
+    PARSER.add_argument('-n', '--n-components',
+                        help="Number of dimensions", type=int,
+                        default=300)
+    PARSER.add_argument('-o', '--outfile', default=None,
+                        help=("Destination to store lsa embeddings in ben format. "
+                              "Default is 'data/embeddings/lsa-{n_components}.pkl'"))
+    ARGS = PARSER.parse_args()
+
+    if ARGS.outfile is None:
+        ARGS.outfile = os.path.join("data", "embeddings", f"lsa-{ARGS.n_components}.pkl")
+    print("LSA Embedding will be stored at:", ARGS.outfile)
+
+    main(ARGS)
+

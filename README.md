@@ -7,9 +7,8 @@ within ML/DL/RL/AI/DS/CS/Stats. And, always for the community.
 
 We are showing our results at [AI Distillery Heroku web server](https://ai-distiller.herokuapp.com/) 
 
-## Reproducibility
 
-### Installation
+## Installation
 
 Please consider using a virtual environment as shown below.
 This way, the scripts won't pollute your global `$PATH`.
@@ -32,9 +31,7 @@ The package will install the following executables:
 The commands link the respective executable scripts in `scripts/`.
 
 
-
-
-### Fetching data
+## Fetching data
 
 We maintain [a fork](https://github.com/beduffy/arxiv-sanity-preserver) of
 [Karpathy's Arxiv Sanity Preserver](https://github.com/karpathy/arxiv-sanity-preserver) to harvest
@@ -53,13 +50,13 @@ git submodule update --init
 
 Then follow the [guide by Karpathy](https://github.com/karpathy/arxiv-sanity-preserver) to run the code.
 
-### Executing the scripts
+## Executing scripts
 
 Please consult `-h` for more information on how to run one of the executables.
 
-#### An example call
+### An example call to run LSA
 
-An example call to compute 2-dimensional LSA vectors for the documents:
+An example call to compute 2-dimensional LSA (latent semantic analysis) vectors for the documents:
 
 ```sh
 embed_lsa data/txt/ -n 2 --annotate data/full_paper_id_to_title_dict.pkl -o data/embeddings/lsa-2.pkl
@@ -72,7 +69,7 @@ The output is stored in Ben format. A pickled dict of type `{'labels':
 labels:list(str), 'embeddings': embeddings:numpy.ndarray }` such that `labels[i]`
 corresponds to `embeddings[i]`.
 
-### Developing
+## Contributing
 
 Make sure to install the aidistillery  package by `pip install -e .` or `python3 setup.py develop`.
 This way, any changes take effect without the need to reinstall.

@@ -1,7 +1,6 @@
 venv
-data
-embeddings/*
-!embeddings/.gitkeep
+data/*
+!data/.gitkeep
 
 __pycache__/
 .idea/*

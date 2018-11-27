@@ -20,10 +20,10 @@ setup(name='aidistillery',
             'pytest'
       ],
       scripts=[
-            'bin/embed_doc2vec',
-            'bin/embed_lsa',
-            'bin/embed_word2vec',
-            'bin/harvest_semanticscholar',
-            'bin/extract_entities'
+            'scripts/embed_doc2vec',
+            'scripts/embed_lsa',
+            'scripts/embed_word2vec',
+            'scripts/harvest_semanticscholar',
+            'scripts/extract_entities'
       ],
       zip_safe=False)

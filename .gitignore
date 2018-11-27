@@ -1,6 +1,7 @@
 venv
 data/*
 !data/.gitkeep
+!data/embeddings/.gitkeep
 
 __pycache__/
 .idea/*

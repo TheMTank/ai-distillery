@@ -1,6 +1,6 @@
 # ai-distillery
 
-<img src="https://travis-ci.org/TheMTank/ai-distillery.svg?branch=master" alt="build:">
+[![Build Status](https://travis-ci.org/TheMTank/ai-distillery.svg?branch=master)](https://travis-ci.org/TheMTank/ai-distillery)
 
 Automatically modelling and distilling knowledge within AI. In other words,
 summarise the arxiv firehose. Map, categorise, quantify, qualify, filter,

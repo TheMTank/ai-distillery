@@ -31,6 +31,9 @@ The package will install the following executables:
 
 The commands link the respective executable scripts in `scripts/`.
 
+
+
+
 ### Fetching data
 
 We maintain [a fork](https://github.com/beduffy/arxiv-sanity-preserver) of
@@ -53,6 +56,21 @@ Then follow the [guide by Karpathy](https://github.com/karpathy/arxiv-sanity-pre
 ### Executing the scripts
 
 Please consult `-h` for more information on how to run one of the executables.
+
+#### An example call
+
+An example call to compute 2-dimensional LSA vectors for the documents:
+
+```sh
+embed_lsa data/txt/ -n 2 --annotate data/full_paper_id_to_title_dict.pkl -o data/embeddings/lsa-2.pkl
+```
+
+This call assumes that `data/txt/` contains `*.pdf.txt` files.
+The `-n` arguments determines the number of components at which the singular value decomposition in LSA should truncate. This also determines the embedding dimension.
+The optional `--annotate` argument supplies a path to a pickled dict which maps identifiers (filenames without `.pdf.txt`) to titles for visualization.
+The output will be stored in Ben format. A pickled dict of type `{'labels':
+labels:list(str), 'embeddings': embeddings:ndarray }` such that `labels[i]`
+corresponds to `embeddings[i]`.
 
 ### Developing
 

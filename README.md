@@ -5,7 +5,7 @@ summarise the arxiv firehose. Map, categorise, quantify, qualify, filter,
 search, browse, reduce, digest, compress, summarise and model all knowledge
 within ML/DL/RL/AI/DS/CS/Stats. And, always for the community. 
 
-We are showing our results at [AI Distillery Heroku web server](https://ai-distiller.herokuapp.com/) 
+We are showing our results on [ai-distillery.io](http://ai-distillery.io/).
 
 
 ## Installation

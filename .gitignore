@@ -3,7 +3,7 @@ data/*
 !data/.gitkeep
 !data/embeddings/.gitkeep
 
-__pycache__/
+__pycache__
 .idea/*
 .idea
 *.egg-info

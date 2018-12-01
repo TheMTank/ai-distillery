@@ -1,4 +1,8 @@
-""" Evaluate paper embeddings on downstream tasks """
+""" Evaluate paper embeddings on downstream tasks 
+
+This is untested code. The goal is to have an automatic evaluation for document embeddings.
+
+"""
 import argparse
 import glob
 import numpy as np

@@ -1,4 +1,0 @@
-{
-  "tests/cleaner_text_test.py::CleanTextMethods": true,
-  "tests/cleaner_text_test.py::CleanTextMethods::test_replace_ngram": true
-}

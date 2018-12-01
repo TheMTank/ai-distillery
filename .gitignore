@@ -1,6 +1,9 @@
 venv
-data
-embeddings
-__pycache__/
+data/*
+!data/.gitkeep
+!data/embeddings/.gitkeep
+
+__pycache__
 .idea/*
 .idea
+*.egg-info

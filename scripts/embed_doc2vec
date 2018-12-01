@@ -1,8 +1,11 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 import gensim
 import argparse
 from os import listdir
 from os.path import isfile, join
-from utils import clean_raw_data as cl
+from aidistillery import data_cleaning as cl
 import logging
 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 

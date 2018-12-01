@@ -1,20 +1,22 @@
 import re
+import gensim
 from gensim.models.phrases import Phrases, Phraser
 import os
 import pandas as pd
 
-try:
-    from nltk.corpus import stopwords
-    # from nltk.tokenize import word_tokenize
-    NLTK_AVAILABLE = True
-except ImportError:
-    NLTK_AVAILABLE = False
+from sklearn.feature_extraction.stop_words import ENGLISH_STOP_WORDS
+
+# try:
+#     from nltk.corpus import stopwords
+#     # from nltk.tokenize import word_tokenize
+#     NLTK_AVAILABLE = True
+# except ImportError:
+#     NLTK_AVAILABLE = False
 
 def remove_stop_words(string):
-    if not NLTK_AVAILABLE:
-        raise UserWarning("Please install nltk to make use of stop_words")
-
-    stop_words = set(stopwords.words('english'))
+    # old variant:
+    # stop_words = set(stopwords.words('english'))
+    stop_words = ENGLISH_STOP_WORDS
 
     words = string.split()
 
@@ -36,8 +38,10 @@ def filter_empty(string):
     return " ".join(content)
 
 def remove_non_alpha_chars(word):
-    word = re.sub("\S*\d\S*", "", word).strip()
-    word = re.sub('[^A-Za-z]', '', word).strip()
+    # Deprecated. Use `normalize_text` instead.
+    # Drop if unused.
+    word = re.sub(r"\S*\d\S*", "", word).strip()
+    word = re.sub(r"[^A-Za-z]", "", word).strip()
 
     return word
 
@@ -84,36 +88,38 @@ class NGramReplacer:
         return sentence
 
 # An alternative short hand
-def normalize_text(text):
+def normalize_text(text, lower=True):
     """
     Normalizes a string.
     The string is lowercased and all non-alphanumeric characters are removed.
 
-    >>> normalize("already normalized")
+    >>> normalize_text("already normalized")
     'already normalized'
-    >>> normalize("This is a fancy title / with subtitle ")
+    >>> normalize_text("This is a fancy title / with subtitle ")
     'this is a fancy title with subtitle'
-    >>> normalize("#@$~(@ $*This has fancy \\n symbols in it \\n")
+    >>> normalize_text("#@$~(@ $*This has fancy \\n symbols in it \\n")
     'this has fancy symbols in it'
-    >>> normalize("Oh no a ton of special symbols: $*#@(@()!")
+    >>> normalize_text("Oh no a ton of special symbols: $*#@(@()!")
     'oh no a ton of special symbols'
-    >>> normalize("A (2009) +B (2008)")
+    >>> normalize_text("A (2009) +B (2008)")
     'a 2009 b 2008'
-    >>> normalize("1238912839")
+    >>> normalize_text("1238912839")
     '1238912839'
-    >>> normalize("#$@(*$(@#$*(")
+    >>> normalize_text("#$@(*$(@#$*(")
     ''
-    >>> normalize("Now$ this$ =is= a $*#(ing crazy string !!@)# check")
+    >>> normalize_text("Now$ this$ =is= a $*#(ing crazy string !!@)# check")
     'now this is a ing crazy string check'
-    >>> normalize("Also commata, and other punctuation... is not alpha-numeric")
+    >>> normalize_text("Also commata, and other punctuation... is not alpha-numeric")
     'also commata and other punctuation is not alphanumeric'
-    >>> normalize(("This goes over\\n" "Two Lines"))
+    >>> normalize_text(("This goes over\\n" "Two Lines"))
     'this goes over two lines'
-    >>> normalize('')
+    >>> normalize_text('')
     ''
     """
+    if lower:
+        text = text.lower()
     return ' '.join(filter(None, (''.join(c for c in w if c.isalnum())
-                                  for w in text.lower().split())))
+                                  for w in text.split())))
 
 
 

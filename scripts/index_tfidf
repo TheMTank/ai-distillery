@@ -7,10 +7,9 @@ import pickle
 
 import numpy as np
 
-from sklearn.feature_extraction.text import HashingVectorizer, TfidfTransformer
+from sklearn.feature_extraction.text import CountVectorizer, HashingVectorizer, TfidfTransformer
 
 from aidistillery.file_handling import identifier_from_path
-from aidistillery.data_cleaning import normalize_text
 
 
 def main(args):
@@ -23,7 +22,21 @@ def main(args):
     """
     raw_documents = glob.glob(os.path.join(args.datadir, '*'))
 
-    vect = HashingVectorizer(input='filename', stop_words='english', norm=None)
+    vect_args = {
+        'input': 'filename',
+        'stop_words': 'english',
+    }
+
+    if args.hash:
+        if args.n_features is None:
+            args.n_features = 2 ** 20  # sklearn default for hashingvectorizer
+        else:
+            print("Limiting vocab with hashing vectorizer cause hashes to collide")
+
+        vect = HashingVectorizer(n_features=args.n_features, norm=None, **vect_args)
+    else:
+        vect = CountVectorizer(max_features=args.n_features, **vect_args)                               
+
     tfidf = TfidfTransformer(norm='l2')
 
     X = vect.fit_transform(raw_documents)
@@ -52,10 +65,14 @@ def _add_args(parser):
                         help="Path to txt file root")
     parser.add_argument("-o", "--outpath", required=True,
                         help="Path to output directory")
+    parser.add_argument("-n", "--n-features", default=None, type=int,
+                        help="Use that many features (default unlimited)")
+    parser.add_argument("--hash", action='store_true', default=False,
+                        help="Use (stateless) hashing vectorizer")
 
 if __name__ == "__main__":
     import argparse
-    parser = argparse.ArgumentParser()
-    _add_args(parser)
-    args = parser.parse_args()
-    main(args)
+    PARSER = argparse.ArgumentParser()
+    _add_args(PARSER)
+    ARGS = PARSER.parse_args()
+    main(ARGS)

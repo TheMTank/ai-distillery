@@ -46,19 +46,24 @@ def main(args):
     with open(args.outfile, 'wb') as outfile:
         pickle.dump(embedding_bf, outfile)
 
-if __name__ == '__main__':
-    PARSER = argparse.ArgumentParser()
-    PARSER.add_argument('data',
+
+def _add_args(parser):
+    parser.add_argument('data',
                         help="Path to dir containing full-texts")
-    PARSER.add_argument('--annotate',
+    parser.add_argument('--annotate',
                         help="Path to pickled dict containing id to title mapping",
                         default=None)
-    PARSER.add_argument('-n', '--n-components',
+    parser.add_argument('-n', '--n-components',
                         help="Number of dimensions", type=int,
                         default=300)
-    PARSER.add_argument('-o', '--outfile', default=None,
+    parser.add_argument('-o', '--outfile', default=None,
                         help=("Destination to store lsa embeddings in ben format. "
                               "Default is 'data/embeddings/lsa-{n_components}.pkl'"))
+
+
+if __name__ == '__main__':
+    PARSER = argparse.ArgumentParser()
+    PARSER = _add_args(PARSER)
     ARGS = PARSER.parse_args()
 
     if ARGS.outfile is None:

@@ -1,0 +1,60 @@
+#!/usr/bin/env python3
+
+import argparse
+
+# TODO FIXME Import does *FAIL*, migrate other scripts into package, such that
+# this script is stand-alone wrt aidistillery package.
+
+from embed_lsa import main as lsa_main, _add_args as lsa_add_args
+
+# A mapping from subcommand to main executable of subcommand
+class DistillSubcommand(object):
+
+      """Docstring for DistillSubcommand. """
+
+      def __init__(self, command, add_args_fn, main_fn, help=None):
+            """Common data structure for subcommands
+
+            :command: The subcommand string
+            :add_args_fn: A function that takes a parser and adds arguments
+            :main_fn: The main function to run with arguments namespace
+            :help: (optional) help string for the subcommand
+
+            """
+            self._command = command
+            self._add_args_fn = add_args_fn
+            self._main_fn = main_fn
+            self._help = help
+
+
+SUBCOMMANDS = [
+      DistillSubcommand('lsa', lsa_add_args, lsa_main, "Latent Semantic Analysis")
+      # TODO add more
+]
+
+
+            
+
+def main():
+      """Main entry point for ai distillery's cli 
+      """
+      parser = argparse.ArgumentParser()
+      parser.add_argument(choices)
+      subparsers = parser.add_subparsers(help="Sub-command help")
+
+      # Register all subcommands
+      for subcommand in SUBCOMMANDS:
+            subcommand_parser = subparser.add_parser(subcommand.command, help=subcommand.help)
+            subcommand.add_args_fn(subcommand_parser)
+
+      # Parse everything
+      args = parser.parse_args()
+
+      # Args only holds namespace for selected subcommand
+      subcommand.main(args)
+
+
+
+if __name__ == "__main__":
+      main()
+

@@ -7,7 +7,15 @@ summarise the arxiv firehose. Map, categorise, quantify, qualify, filter,
 search, browse, reduce, digest, compress, summarise and model all knowledge
 within ML/DL/RL/AI/DS/CS/Stats. And, always for the community. 
 
-We are showing our results on [ai-distillery.io](http://ai-distillery.io/).
+We are showing some of our results on [ai-distillery.io](http://ai-distillery.io/).
+
+
+![AI Distllery visualization section](docs/image-of-ai-distillery-app-viz-section.png)
+Server GitHub repo at [ai-distillery-app](https://github.com/TheMTank/ai-distillery-app)
+
+Number of arxiv papers released over time from 2014 Jan - November 2018
+
+![Num arxiv papers released over time 2014+](docs/The-M-Tank-Num-arxiv-papers-up-to-november.png)
 
 
 ## Installation

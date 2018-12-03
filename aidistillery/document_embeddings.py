@@ -8,17 +8,27 @@ import os
 import sys
 import pickle
 
+import gensim
+
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.pipeline import Pipeline
 from sklearn.decomposition import TruncatedSVD
 
-from aidistillery.file_handling import identifier_from_path
+from .file_handling import identifier_from_path
+from .data_cleaning import normalize_text, remove_stop_words
 
-def main(args):
+##############################################################################
+# LSA embedding methods
+#######################
+
+def lsa_main(args):
     """Runs lsa on a data directory
 
     :args: command line argument namespace
     """
+    if ARGS.outfile is None:
+        ARGS.outfile = os.path.join("data", "embeddings", f"lsa-{ARGS.n_components}.pkl")
+    print("LSA Embedding will be stored at:", ARGS.outfile)
     lsa = Pipeline(
         [
             ("tfidf", TfidfVectorizer(input='filename', stop_words='english', max_features=50000)),
@@ -47,7 +57,7 @@ def main(args):
         pickle.dump(embedding_bf, outfile)
 
 
-def _add_args(parser):
+def lsa_add_args(parser):
     parser.add_argument('data',
                         help="Path to dir containing full-texts")
     parser.add_argument('--annotate',
@@ -61,14 +71,44 @@ def _add_args(parser):
                               "Default is 'data/embeddings/lsa-{n_components}.pkl'"))
 
 
-if __name__ == '__main__':
-    PARSER = argparse.ArgumentParser()
-    PARSER = _add_args(PARSER)
-    ARGS = PARSER.parse_args()
+##############################################################################
+# Doc2vec embedding methods
+###########################
 
-    if ARGS.outfile is None:
-        ARGS.outfile = os.path.join("data", "embeddings", f"lsa-{ARGS.n_components}.pkl")
-    print("LSA Embedding will be stored at:", ARGS.outfile)
+def read_corpus(files, train_folder):
+    for file in files:
+        data = open(train_folder + file, "r").read().strip()
+        # Normalize first, then remove stop words
+        string = normalize_text(data)
+        string = remove_stop_words(string)
 
-    main(ARGS)
+        yield gensim.models.doc2vec.TaggedDocument(gensim.utils.simple_preprocess(string), [file])
+
+def doc2vec_main(args):
+    """Run doc2vec on a bunch of documents
+
+    :args: argument namespace
+
+    """
+    train_folder = args.folder
+
+    onlyfiles = [f for f in os.listdir(train_folder) \
+                 if os.path.isfile(os.path.join(train_folder, f))]
+
+    train_corpus = list(read_corpus(onlyfiles, train_folder))
+
+    model = gensim.models.doc2vec.Doc2Vec(vector_size=args.dimension, min_count=args.min_count)
+    model.build_vocab(train_corpus)
+    model.train(train_corpus, total_examples=model.corpus_count, epochs=model.epochs)
+    model.save(args.output_file)
+
+def doc2vec_add_args(parser):
+    parser.add_argument('-f', '--folder',
+                        help="Path to the folder that contains textual documents")
+    parser.add_argument('-d', '--dimension', default="100",
+                        help="Dimension of the desired embeddings", type=int)
+    parser.add_argument('-mc', '--min_count', default="5",
+                        help="Min number of occurrence of words", type=int)
+    parser.add_argument('-o', '--output_file', default="output_embedding",
+                        help="Output embedding file")
 

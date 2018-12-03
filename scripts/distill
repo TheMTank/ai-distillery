@@ -5,7 +5,8 @@ import argparse
 # TODO FIXME Import does *FAIL*, migrate other scripts into package, such that
 # this script is stand-alone wrt aidistillery package.
 
-from embed_lsa import main as lsa_main, _add_args as lsa_add_args
+from aidistillery.document_embeddings import lsa_main, lsa_add_args
+from aidistillery.document_embeddings import doc2vec_main, doc2vec_add_args
 
 # A mapping from subcommand to main executable of subcommand
 class DistillSubcommand(object):
@@ -21,14 +22,15 @@ class DistillSubcommand(object):
             :help: (optional) help string for the subcommand
 
             """
-            self._command = command
-            self._add_args_fn = add_args_fn
-            self._main_fn = main_fn
-            self._help = help
+            self.command = command
+            self.add_args_fn = add_args_fn
+            self.main_fn = main_fn
+            self.help = help
 
 
 SUBCOMMANDS = [
-      DistillSubcommand('lsa', lsa_add_args, lsa_main, "Latent Semantic Analysis")
+      DistillSubcommand('lsa', lsa_add_args, lsa_main, "Run latent semantic analysis"),
+      DistillSubcommand('doc2vec', doc2vec_add_args, doc2vec_main, "Run doc2vec")
       # TODO add more
 ]
 

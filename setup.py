@@ -24,6 +24,7 @@ setup(name='aidistillery',
             'scripts/embed_lsa',
             'scripts/embed_word2vec',
             'scripts/harvest_semanticscholar',
-            'scripts/extract_entities'
+            'scripts/extract_entities',
+            'scripts/index_tfidf'
       ],
       zip_safe=False)

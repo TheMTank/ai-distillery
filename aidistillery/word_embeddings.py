@@ -7,12 +7,12 @@ embed.py (Executable)
 
 Generate embeddings using word2vec from a text collection
 
-Example: `python3 embed.py -f data/text -o data/saved_embedding -d 100`
+Example: `distill word2vec -f data/text -o data/saved_embedding -d 100`
 """
 
 import argparse
-from aidistillery.data_cleaning import list_of_strings_to_list_of_lists, clean_raw_text_from_file, phrasing_sentences
-from aidistillery.models import word2vec_wrapper
+from .data_cleaning import list_of_strings_to_list_of_lists, clean_raw_text_from_file, phrasing_sentences
+from .models import word2vec_wrapper
 
 def load_and_process(file_name, min_length):
     """
@@ -30,9 +30,7 @@ def load_and_process(file_name, min_length):
     return phrased_lists
 
 
-def main():
-
-    parser = argparse.ArgumentParser()
+def word2vec_add_args(parser):
     parser.add_argument('-f', '--file_name', default="text_to_embed.txt",
                         help="Text file") 
     parser.add_argument('-d', '--dimension', default="100",
@@ -52,6 +50,10 @@ def main():
     parser.add_argument('-o', '--output_file', default="output_embedding",
                         help="Output embedding file")
 
+
+def word2vec_main():
+
+    parser = argparse.ArgumentParser()
     args = parser.parse_args()
 
     print("Creating Embeddings with:", args.dimension, "dimensions", args.window, "window", args.min_count, "min_count")
@@ -70,7 +72,3 @@ def main():
     model = w2v.fit()
 
     model.save()
-
-
-if __name__ == '__main__':
-    main()

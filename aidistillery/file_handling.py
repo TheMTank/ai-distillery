@@ -42,6 +42,8 @@ class BF:
         self.labels = list(model.wv.vocab.keys())
         self.embeddings = np.concatenate([model[word].reshape(1, -1) for word in self.labels], axis=0)
 
+        return self
+
     def save(self, output_location):
         """
         Save bf model using pickle

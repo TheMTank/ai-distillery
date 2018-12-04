@@ -1,0 +1,69 @@
+#!/usr/bin/env python3
+
+import argparse
+from collections import OrderedDict
+
+# TODO FIXME Import does *FAIL*, migrate other scripts into package, such that
+# this script is stand-alone wrt aidistillery package.
+
+from aidistillery.word_embeddings import word2vec_main, word2vec_add_args
+from aidistillery.document_embeddings import lsa_main, lsa_add_args
+from aidistillery.document_embeddings import doc2vec_main, doc2vec_add_args
+from aidistillery.named_entities import ner_main, ner_add_args
+
+# A mapping from subcommand to main executable of subcommand
+class DistillSubcommand(object):
+
+      """Docstring for DistillSubcommand. """
+
+      def __init__(self, add_args_fn, main_fn, help=None):
+            """Common data structure for subcommands
+
+            :command: The subcommand string
+            :add_args_fn: A function that takes a parser and adds arguments
+            :main_fn: The main function to run with arguments namespace
+            :help: (optional) help string for the subcommand
+
+            """
+            self.add_args_fn = add_args_fn
+            self.main_fn = main_fn
+            self.help = help
+
+
+SUBCOMMANDS = OrderedDict([
+      ('word2vec', DistillSubcommand(word2vec_add_args, word2vec_main, "Run word2vec")),
+      ('lsa', DistillSubcommand(lsa_add_args, lsa_main, "Run latent semantic analysis")),
+      ('doc2vec', DistillSubcommand(doc2vec_add_args, doc2vec_main, "Run doc2vec")),
+      ('ner', DistillSubcommand(ner_add_args, ner_main, "Run named entity recognition"))
+])
+
+
+            
+
+def main():
+    """Main entry point for ai distillery's cli 
+    """
+    parser = argparse.ArgumentParser()
+    subparsers = parser.add_subparsers(help="Distillation methods", dest="command")
+
+    # Register all subcommands
+    for key, cmd in SUBCOMMANDS.items():
+        subcommand_parser = subparsers.add_parser(key, help=cmd.help)
+        cmd.add_args_fn(subcommand_parser)
+
+    # Parse everything
+    args = parser.parse_args()
+
+    # Args only holds namespace for selected subcommands
+
+    # Get selected command
+    command = SUBCOMMANDS[args.command]
+    command.main_fn(args)
+
+
+
+
+
+if __name__ == "__main__":
+      main()
+

@@ -20,11 +20,6 @@ setup(name='aidistillery',
             'pytest'
       ],
       scripts=[
-            'scripts/embed_doc2vec',
-            'scripts/embed_lsa',
-            'scripts/embed_word2vec',
-            'scripts/harvest_semanticscholar',
-            'scripts/extract_entities',
-            'scripts/index_tfidf'
+            'scripts/distill'
       ],
       zip_safe=False)

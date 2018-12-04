@@ -26,9 +26,10 @@ def lsa_main(args):
 
     :args: command line argument namespace
     """
-    if ARGS.outfile is None:
-        ARGS.outfile = os.path.join("data", "embeddings", f"lsa-{ARGS.n_components}.pkl")
-    print("LSA Embedding will be stored at:", ARGS.outfile)
+    if args.outfile is None:
+        os.makedirs(os.path.join("data", "tmp"), exist_ok=True)
+        args.outfile = os.path.join("data", "tmp", f"lsa-{args.n_components}.pkl")
+    print("LSA Embedding will be stored at:", args.outfile)
     lsa = Pipeline(
         [
             ("tfidf", TfidfVectorizer(input='filename', stop_words='english', max_features=50000)),

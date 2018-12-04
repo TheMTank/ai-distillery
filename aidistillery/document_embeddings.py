@@ -69,7 +69,7 @@ def lsa_add_args(parser):
                         default=300)
     parser.add_argument('-o', '--outfile', default=None,
                         help=("Destination to store lsa embeddings in ben format. "
-                              "Default is 'data/embeddings/lsa-{n_components}.pkl'"))
+                              "Default is 'data/tmp/lsa-{n_components}.pkl'"))
 
 
 ##############################################################################

@@ -30,16 +30,8 @@ virtualenv venv && source venv/bin/activate # STRONGLY RECOMMENDED
 pip install -e .
 ```
 
-The package will install the following executables:
-
-- `embed_doc2vec`
-- `embed_lsa`
-- `embed_word2vec`
-- `harvest_semanticscholar`
-- `extract_entities`
-
-The commands link to the respective executable scripts in `scripts/`.
-
+The package will install a single executable `distill`. Distill can be invoked to apply latent semantic analysis, word2vec, doc2vec, and extracting named entities.
+Consolt `distill -h` for more information on the available subcommands.
 
 ## Fetching data
 
@@ -69,7 +61,7 @@ Please consult `-h` for more information on how to run one of the executables.
 An example call to compute 2-dimensional LSA (latent semantic analysis) vectors for the documents:
 
 ```sh
-embed_lsa data/txt/ -n 2 --annotate data/full_paper_id_to_title_dict.pkl -o data/embeddings/lsa-2.pkl
+distill lsa data/txt/ -n 2 --annotate data/full_paper_id_to_title_dict.pkl -o data/embeddings/lsa-2.pkl
 ```
 
 This call assumes that `data/txt/` contains `*.pdf.txt` files.

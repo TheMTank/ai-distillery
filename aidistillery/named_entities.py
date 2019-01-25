@@ -62,9 +62,7 @@ def extract_entities(document, types):
     return [ent.text for ent in NLP(document).ents if ent.label_ in types]
 
 
-
-def main():
-    parser = argparse.ArgumentParser()
+def ner_add_args(parser):
     parser.add_argument('-d', '--data', default="data/txt",
                         help="Root directory for txt files [data/txt]")
     parser.add_argument('-e', '--entity-types', nargs='+',
@@ -76,7 +74,7 @@ def main():
     parser.add_argument('-o', '--output-path', default='data/entities_for',
                         help="Choose where to output json file containing all entities with number of files added on")
 
-    args = parser.parse_args()
+def ner_main(args):
     # Resolve keyword '_all' as alias for all entity types
     entity_types = VALID_ENTITY_TYPES if '_all' in args.entity_types else args.entity_types
     # set for faster access
@@ -107,6 +105,3 @@ def main():
 
     with open('{}_num_files_{}.json'.format(args.output_path, len(entities_for_file.keys())), 'w') as fp:
         json.dump(entities_for_file, fp)
-
-if __name__ == '__main__':
-    main()

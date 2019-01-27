@@ -12,12 +12,15 @@ setup(name='aidistillery',
             'numpy',
             'scipy',
             'sklearn',
+            'torch',
             'matplotlib',
             'pandas',
             'spacy',
             'gensim==3.4.0',
             'fuzzywuzzy',
-            'pytest'
+            'pytest',
+            'dgl',
+            'tqdm',
       ],
       scripts=[
             'scripts/distill'

@@ -61,14 +61,7 @@ import torch as th
 from tqdm import tqdm
 import dgl.function as fn
 
-DAMP = 0.85  # damping factor
 
-def pagerank_builtin(g):
-    N = len(g)
-    g.ndata['pv'] = g.ndata['pv'] / g.ndata['deg']
-    g.update_all(message_func=fn.copy_src(src='pv', out='m'),
-                 reduce_func=fn.sum(msg='m',out='m_sum'))
-    g.ndata['pv'] = (1 - DAMP) / N + DAMP * g.ndata['m_sum']
 
 def load_data(path):
     import pickle
@@ -77,7 +70,7 @@ def load_data(path):
     return db
 
 
-def build_graph(db):
+def build_graph(db, directed=True):
     print("Building graph from %d papers" % len(db.keys()))
     idx2doc = list(db.keys())
     doc2idx = {key: idx for idx, key in enumerate(idx2doc)}
@@ -97,23 +90,41 @@ def build_graph(db):
             if author not in aut2idx:
                 g.add_nodes(1)
                 g.add_edge(len(g) - 1, paper_idx)
+                if not directed:
+                    g.add_edge(paper_idx, len(g) - 1)
             else:
                 g.add_edge(aut2idx[author], paper_idx)
+                if not directed:
+                    g.add_edge(paper_idx, aut2idx[author])
 
         for tag in tags:
             if tag not in tag2idx:
                 g.add_nodes(1)
                 g.add_edge(paper_idx, len(g) - 1)
+                if not directed:
+                    g.add_edge(len(g) - 1, paper_idx)
             else:
                 g.add_edge(paper_idx, tag2idx[tag])
+                if not directed:
+                    g.add_edge(tag2idx[tag], paper_idx)
+
     return g, idx2doc
 
 
 def pagerank_main(args):
     db = load_data(args.picklefile)
-    g, idx2doc = build_graph(db)
+    g, idx2doc = build_graph(db, directed=False)
     print("Running pagerank for %d steps" % args.steps)
     N = len(g)
+    DAMP = args.damp
+
+    def pagerank_builtin(g):
+        g.ndata['pv'] = g.ndata['pv'] / g.ndata['deg']
+        g.update_all(message_func=fn.copy_src(src='pv', out='m'),
+                     reduce_func=fn.sum(msg='m',out='m_sum'))
+        g.ndata['pv'] = (1 - DAMP) / N + DAMP * g.ndata['m_sum']
+
+    # Initial values
     g.ndata['pv'] = th.ones(N) / N
     g.ndata['deg'] = g.out_degrees(g.nodes()).float()
     for k in tqdm(range(args.steps)):
@@ -121,16 +132,18 @@ def pagerank_main(args):
 
     print("Sorting...")
     ind = th.argsort(g.ndata['pv'])[-args.top:]
-    print("Top %d hottest papers:" % args.top)
+    print("Top %d hot papers by PageRank:" % args.top)
     for k, paper_idx in enumerate(reversed(ind)):
         suppl_data = db[idx2doc[paper_idx]]
-        print("PageRank Top-{} (pv={}): '{}' / {} ({}).".format(
-            k+1,
-            g.ndata['pv'][paper_idx],
-            suppl_data['title'],
+        print("Top-{} (pv={:.2E}): '{}' ({}, {}, {} authors, Tags: {})".format(
+            k+1, g.ndata['pv'][paper_idx],
+            suppl_data['title'].replace('\n', ' '),
             suppl_data['link'],
-            suppl_data['published_parsed'].tm_year
-        ))
+            suppl_data['published_parsed'].tm_year,
+            len(suppl_data['authors']),
+            ', '.join(t['term'] for t in suppl_data['tags'])
+            )
+            )
     print("kthxbye.")
 
 
@@ -149,6 +162,9 @@ def pagerank_add_args(args):
                         help="Number of top page-ranked docs to return [10]",
                         default=10,
                         type=int)
+
+    parser.add_argument('-d', '--damp', help="Damping Factor",
+                        default=.85, type=float)
 
 def gcn_main(args):
     db = load_data(args.picklefile)

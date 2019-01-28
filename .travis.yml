@@ -9,7 +9,7 @@ before_install:
   - export BOTO_CONFIG=/dev/null
 
 install:
-  pip install .
+  travis_wait pip install -r requirements
 
 script:
   cd tests; python -m pytest

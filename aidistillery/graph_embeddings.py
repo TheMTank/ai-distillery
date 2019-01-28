@@ -137,7 +137,7 @@ def pagerank_main(args):
         suppl_data = db[idx2doc[paper_idx]]
         print("Top-{} (pv={:.2E}): '{}' ({}, {}, {} authors, Tags: {})".format(
             k+1, g.ndata['pv'][paper_idx],
-            suppl_data['title'].replace('\n', ' '),
+            ' '.join(suppl_data['title'].split()),
             suppl_data['link'],
             suppl_data['published_parsed'].tm_year,
             len(suppl_data['authors']),

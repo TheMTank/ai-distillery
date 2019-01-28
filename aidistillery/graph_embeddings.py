@@ -186,7 +186,7 @@ def pagerank_main(args):
     print("kthxbye.")
 
 
-def pagerank_add_args(args):
+def pagerank_add_args(parser):
     parser.add_argument('picklefile', help="Path to pickled input data")
     parser.add_argument('-k',
                         '--steps',

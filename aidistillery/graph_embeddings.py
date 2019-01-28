@@ -56,6 +56,7 @@ Example data :
  '_version': 1}
 """
 
+from operator import itemgetter
 import dgl
 import torch as th
 from tqdm import tqdm
@@ -74,6 +75,7 @@ def build_graph(db, directed=True):
     print("Building graph from %d papers" % len(db.keys()))
     idx2doc = list(db.keys())
     doc2idx = {key: idx for idx, key in enumerate(idx2doc)}
+
     tag2idx = {}
     aut2idx = {}
 
@@ -110,15 +112,38 @@ def build_graph(db, directed=True):
                 if not directed:
                     g.add_edge(tag2idx[tag], paper_idx)
 
-    return g, idx2doc
+    idx2tag = {idx: tag for tag, idx in tag2idx.items()}
+    idx2aut = {idx: aut for aut, idx in aut2idx.items()}
 
+    return g, idx2doc, idx2tag, idx2aut
+
+
+def top(probs, subset, n=None):
+    """
+    Args
+    ====
+    probs: array of probabilities to sort
+    subset: [(idx, item)]
+
+    Ret
+    ===
+    Top-n of (item, prob) pairs.
+    """
+
+    zipped_probs = [(item, probs[idx]) for idx, item in subset]
+    zipped_probs.sort(key=itemgetter(1), reverse=True)
+    return zipped_probs[:n]
 
 def pagerank_main(args):
     db = load_data(args.picklefile)
-    g, idx2doc = build_graph(db, directed=False)
-    print("Running pagerank for %d steps" % args.steps)
+    g, idx2doc, idx2tag, idx2aut = build_graph(db, directed=False)
+    print("%d nodes, %d edges." % (g.number_of_nodes(), g.number_of_edges()))
+
     N = len(g)
     DAMP = args.damp
+
+    print("N =", N)
+    print("DAMP =", DAMP)
 
     def pagerank_builtin(g):
         g.ndata['pv'] = g.ndata['pv'] / g.ndata['deg']
@@ -126,6 +151,7 @@ def pagerank_main(args):
                      reduce_func=fn.sum(msg='m',out='m_sum'))
         g.ndata['pv'] = (1 - DAMP) / N + DAMP * g.ndata['m_sum']
 
+    print("Running pagerank for %d steps" % args.steps)
     # Initial values
     g.ndata['pv'] = th.ones(N) / N
     g.ndata['deg'] = g.out_degrees(g.nodes()).float()
@@ -133,19 +159,30 @@ def pagerank_main(args):
         pagerank_builtin(g)
 
     print("Sorting...")
-    ind = th.argsort(g.ndata['pv'])[-args.top:]
+    # Only care for paper nodes, not tags or authors
+    pv = g.ndata['pv']
+    top_papers = top(pv, enumerate(idx2doc), args.top)
     print("Top %d hot papers by PageRank:" % args.top)
-    for k, paper_idx in enumerate(reversed(ind)):
-        suppl_data = db[idx2doc[paper_idx]]
+    for k, (key, score) in enumerate(top_papers):
+        suppl_data = db[key]
         print("Top-{} (pv={:.2E}): '{}' ({}, {}, {} authors, Tags: {})".format(
-            k+1, g.ndata['pv'][paper_idx],
+            k+1, score,
             ' '.join(suppl_data['title'].split()),
             suppl_data['link'],
             suppl_data['published_parsed'].tm_year,
             len(suppl_data['authors']),
-            ', '.join(t['term'] for t in suppl_data['tags'])
-            )
-            )
+            ', '.join(t['term'] for t in suppl_data['tags'])))
+
+    print("Top %d hot authors" % args.top)
+    top_authors = top(pv, idx2aut.items(), args.top)
+    for k, (key, score) in enumerate(top_authors):
+        print("Top-{} (pv={:.2E}): {}".format(k+1, score, key))
+
+    print("Top %d hot tags" % args.top)
+    top_tags = top(pv, idx2tag.items(), args.top)
+    for k, (key, score) in enumerate(top_tags):
+        print("Top-{} (pv={:.2E}): {}".format(k+1, score, key))
+
     print("kthxbye.")
 
 

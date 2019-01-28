@@ -198,7 +198,7 @@ def pagerank_add_args(parser):
     parser.add_argument('-n',
                         '--top',
                         metavar='N',
-                        help="Number of top page-ranked docs to return [10]",
+                        help="Number of top page-ranked items to return [10]",
                         default=10,
                         type=int)
 

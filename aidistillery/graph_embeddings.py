@@ -90,6 +90,7 @@ def build_graph(db, directed=True):
             if author not in aut2idx:
                 g.add_nodes(1)
                 g.add_edge(len(g) - 1, paper_idx)
+                aut2idx[author] = len(g) - 1
                 if not directed:
                     g.add_edge(paper_idx, len(g) - 1)
             else:
@@ -101,6 +102,7 @@ def build_graph(db, directed=True):
             if tag not in tag2idx:
                 g.add_nodes(1)
                 g.add_edge(paper_idx, len(g) - 1)
+                tag2idx[tag] = len(g) - 1
                 if not directed:
                     g.add_edge(len(g) - 1, paper_idx)
             else:

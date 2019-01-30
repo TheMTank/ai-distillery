@@ -7,6 +7,7 @@ from collections import OrderedDict
 # this script is stand-alone wrt aidistillery package.
 
 from aidistillery.word_embeddings import word2vec_main, word2vec_add_args
+from aidistillery.fasttext_embeddings import fasttext_add_args, fasttext_main
 from aidistillery.document_embeddings import lsa_main, lsa_add_args
 from aidistillery.document_embeddings import doc2vec_main, doc2vec_add_args
 from aidistillery.named_entities import ner_main, ner_add_args
@@ -32,6 +33,7 @@ class DistillSubcommand(object):
 
 SUBCOMMANDS = OrderedDict([
       ('word2vec', DistillSubcommand(word2vec_add_args, word2vec_main, "Run word2vec")),
+      ('fasttext', DistillSubcommand(fasttext_add_args, fasttext_main, "Run fasttext")),
       ('lsa', DistillSubcommand(lsa_add_args, lsa_main, "Run latent semantic analysis")),
       ('doc2vec', DistillSubcommand(doc2vec_add_args, doc2vec_main, "Run doc2vec")),
       ('ner', DistillSubcommand(ner_add_args, ner_main, "Run named entity recognition"))

@@ -3,16 +3,14 @@
 
 
 """
-embed.py (Executable)
-
 Generate embeddings using word2vec from a text collection
 
-Example: `distill word2vec -f data/text -o data/saved_embedding -d 100`
+Example: `distill fasttext -f data/text -o data/saved_embedding -d 100`
 """
 
 import argparse
 from .data_cleaning import list_of_strings_to_list_of_lists, clean_raw_text_from_file, phrasing_sentences
-from .models import word2vec_wrapper
+from .models import fasttext_wrapper
 
 def load_and_process(file_name, min_length):
     """
@@ -30,7 +28,7 @@ def load_and_process(file_name, min_length):
     return phrased_lists
 
 
-def word2vec_add_args(parser):
+def fasttext_add_args(parser):
     parser.add_argument('-f', '--file_name', default="text_to_embed.txt",
                         help="Text file") 
     parser.add_argument('-d', '--dimension', default="100",
@@ -51,14 +49,15 @@ def word2vec_add_args(parser):
                         help="Output embedding file")
 
 
-def word2vec_main(args):
+def fasttext_main(args):
+
 
     print("Creating Embeddings with:", args.dimension, "dimensions", args.window, "window", args.min_count, "min_count")
     print("Sentences with less than", args.min_length, "chars will be removed")
 
     sentences = load_and_process(args.file_name, args.min_length)
 
-    w2v = word2vec_wrapper.Word2VecWrapper(sentences,
+    ft = fasttext_wrapper.FastTextWrapper(sentences,
         dimension=args.dimension,
         window=args.window,
         min_count=args.min_count,
@@ -66,6 +65,6 @@ def word2vec_main(args):
         sg=0, 
         iterations=args.iterations)
 
-    model = w2v.fit()
+    model = ft.fit()
 
     model.save(args.output_file)

@@ -9,6 +9,8 @@ from aidistillery.document_embeddings import lsa_main, lsa_add_args
 from aidistillery.document_embeddings import doc2vec_main, doc2vec_add_args
 from aidistillery.named_entities import ner_main, ner_add_args
 from aidistillery.graph_embeddings import pagerank_main, pagerank_add_args
+from aidistillery.index_tfidf import tfidf_main, tfidf_add_args
+
 
 # A mapping from subcommand to main executable of subcommand
 class DistillSubcommand(object):
@@ -35,7 +37,8 @@ SUBCOMMANDS = OrderedDict([
       ('lsa', DistillSubcommand(lsa_add_args, lsa_main, "Run latent semantic analysis")),
       ('doc2vec', DistillSubcommand(doc2vec_add_args, doc2vec_main, "Run doc2vec")),
       ('ner', DistillSubcommand(ner_add_args, ner_main, "Run named entity recognition")),
-      ('pagerank', DistillSubcommand(pagerank_add_args, pagerank_main, "Run PageRank"))
+      ('pagerank', DistillSubcommand(pagerank_add_args, pagerank_main, "Run PageRank")),
+      ('tfidf', DistillSubcommand(tfidf_add_args, tfidf_main, "Run TFIDF indexing"))
 ])
 
 

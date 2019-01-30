@@ -6,20 +6,13 @@ import os
 import pickle
 
 import numpy as np
-
 from sklearn.feature_extraction.text import CountVectorizer, HashingVectorizer, TfidfTransformer
 
 from aidistillery.file_handling import identifier_from_path
 
 
-def main(args):
-    """
-    Arguments
-    ---------
-    :args: Namespace object
-
-
-    """
+def tfidf_main(args):
+    print('Beginning tfidf_main(). With args: {}'.format(args))
     raw_documents = glob.glob(os.path.join(args.datadir, '*'))
 
     vect_args = {
@@ -44,6 +37,7 @@ def main(args):
     X = tfidf.fit_transform(X)
     ids = [identifier_from_path(d) for d in raw_documents]
 
+    print('Creating vectorizer, tfidf vector and index2identifier pickle objects')
     os.makedirs(args.outpath, exist_ok=True)
     with open(os.path.join(args.outpath, "vectorizer.pkl"), 'wb') as fhandle:
         pickle.dump(vect, fhandle)
@@ -54,13 +48,7 @@ def main(args):
     with open(os.path.join(args.outpath, "index2identifier.pkl"), 'wb') as fhandle:
         pickle.dump(ids, fhandle)
 
-
-
-
-
-
-
-def _add_args(parser):
+def tfidf_add_args(parser):
     parser.add_argument("-d", "--datadir", required=True,
                         help="Path to txt file root")
     parser.add_argument("-o", "--outpath", required=True,
@@ -70,9 +58,10 @@ def _add_args(parser):
     parser.add_argument("--hash", action='store_true', default=False,
                         help="Use (stateless) hashing vectorizer")
 
+
 if __name__ == "__main__":
     import argparse
     PARSER = argparse.ArgumentParser()
-    _add_args(PARSER)
+    tfidf_add_args(PARSER)
     ARGS = PARSER.parse_args()
-    main(ARGS)
+    tfidf_main(ARGS)

@@ -11,6 +11,7 @@ from aidistillery.named_entities import ner_main, ner_add_args
 from aidistillery.graph_embeddings import pagerank_main, pagerank_add_args
 from aidistillery.index_tfidf import tfidf_main, tfidf_add_args
 
+
 # A mapping from subcommand to main executable of subcommand
 class DistillSubcommand(object):
 

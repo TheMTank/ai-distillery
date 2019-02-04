@@ -9,17 +9,21 @@ setup(name='aidistillery',
       license='MIT',
       packages=['aidistillery'],
       install_requires=[
-            'numpy',
-            'scipy',
-            'sklearn',
-            'matplotlib',
-            'pandas',
-            'spacy',
-            'gensim==3.4.0',
-            'fuzzywuzzy',
-            'pytest'
+          'numpy',
+          'scipy',
+          'sklearn',
+          'torch',
+          'matplotlib',
+          'pandas',
+          'spacy',
+          'gensim==3.4.0',
+          'fuzzywuzzy',
+          'pytest',
+          'dgl',
+          'tqdm',
+          'wrapt<1.11.0'
       ],
       scripts=[
-            'scripts/distill'
+          'scripts/distill'
       ],
       zip_safe=False)
